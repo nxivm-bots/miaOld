@@ -50,7 +50,7 @@
 <summary>Deploy To Heroku</summary>
 <p>
 <br>
-<a href="https://heroku.com/deploy?template=https://github.com/JishuDeveloper/File-Sharing-Bot/tree/4-force-subs">
+<a href="https://heroku.com/deploy?template=https://github.com/Massacresfr/nxivm/tree/4-force-subs">
   <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
 </a>
 </p>
