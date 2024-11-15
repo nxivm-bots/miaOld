@@ -1,6 +1,9 @@
 import os, asyncio, humanize
 from pyrogram import Client, filters, __version__
 from pyrogram.enums import ParseMode
+from datetime import datetime
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated
 from bot import Bot
@@ -13,11 +16,36 @@ jishudeveloper = madflixofficials
 file_auto_delete = humanize.naturaldelta(jishudeveloper)
 
 
+DATABASE_URL = 'postgresql://yamato_owner:bOEDh6mFsU7B@ep-black-butterfly-a5627dlz.us-east-2.aws.neon.tech/yamato?sslmode=require'
+engine = create_engine(DATABASE_URL)
+Session = sessionmaker(bind=engine)
 
+# Function to check if user has a valid token
+def verify_user_token(user_id: int) -> bool:
+    session = Session()
+    token_entry = session.query(Token).filter_by(user_id=user_id).first()
+    session.close()
+    return token_entry and token_entry.expires_at > datetime.now()
 
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed)
 async def start_command(client: Client, message: Message):
+    user_id = message.from_user.id
+
+    # Verify if user has a valid token
+    if not verify_user_token(user_id):
+        # Prompt the user to verify their access via Bot A
+        await message.reply_text(
+            "You need to verify your access. Please use the verification bot to gain access.",
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("Verify Now", url="https://t.me/YourBotA?start=start_verification")]]
+            )
+        )
+        return  # Exit if user is not verified
+
+    # Send a message to let the user know they are verified
+    await message.reply_text("You are verified! Proceeding with the functionality...")
+    
     id = message.from_user.id
     if not await present_user(id):
         try:
