@@ -38,7 +38,7 @@ async def start_command(client: Client, message: Message):
         await message.reply_text(
             "You need to verify your access. Please use the verification bot to gain access.",
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("Verify Now", url="https://t.me/YourBotA?start=start_verification")]]
+                [[InlineKeyboardButton("Verify Now", url="https://t.me/AlcVerifierBot?start=start_verification")]]
             )
         )
         return  # Exit if user is not verified
